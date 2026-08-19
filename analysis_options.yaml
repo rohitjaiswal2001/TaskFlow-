@@ -1,0 +1,22 @@
+# Static analysis configuration. Run with `flutter analyze`.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    # An unawaited future in this codebase is nearly always a bug — a mutation
+    # that races with a refresh, or a test that finishes before its work does.
+    unawaited_futures: warning
+  exclude:
+    - build/**
+
+linter:
+  rules:
+    # Nothing should print to the console; there is no logging framework here
+    # and stray prints ship in release builds.
+    avoid_print: true
+    prefer_single_quotes: true
+    always_declare_return_types: true
+    prefer_final_locals: true
+    unawaited_futures: true
+    use_super_parameters: true
+    sort_child_properties_last: true
