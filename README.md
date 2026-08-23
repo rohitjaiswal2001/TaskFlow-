@@ -68,7 +68,8 @@ application id is `com.taskflow.taskflow`, app version `1.0.0+1`.
 A three-minute screen recording of the app on a device —
 [**`Demo Task Flow.mp4`**](Demo%20Task%20Flow.mp4), at the root of this
 repository (10.5 MB, 1080×2424). GitHub plays it inline when you open that file;
-locally, any player will do.
+locally, any player will do. A still from it is in
+[Screens → Watch it running](#watch-it-running).
 
 It covers login as an admin and as a member (the role rules), creating and
 assigning a task, offline mode with the saved-copy banner, an armed failure and
@@ -212,41 +213,6 @@ lib/
     └── widgets/            # reusable components
 ```
 
-### State management: Provider
-
-Provider is on the brief's allowed list and fits this app: the state is
-per-screen and mostly independent, so a `ChangeNotifier` per feature is enough
-without the ceremony of events and states for every interaction.
-
-Two base classes carry the repetitive parts:
-
-- **`AsyncListNotifier<T>`** — one in-flight request at a time (the previous one
-  is cancelled), consistent state transitions, and data kept on screen during
-  refreshes and errors.
-- **`AsyncValueNotifier<T>`** — the same for the single-record detail screens.
-
-Every data-backed screen renders a `ViewState<T>`:
-
-```
-ViewState
-├── initial     nothing requested yet
-├── loading     carries the previous data so refreshes do not flash empty
-├── success     with isStale + fetchedAt
-├── empty       distinct from success-with-zero-items
-└── error       carries the Failure and the previous data
-```
-
-`AsyncListView` turns that into UI in one place: skeletons on first load, an
-empty view, a full-screen error when there is nothing to fall back on, and an
-inline retry strip when a refresh fails over data that is already on screen.
-
-App-wide notifiers (auth, projects, tasks, members, notifications, settings) are
-created in `app.dart`. Screen-scoped ones (project detail, task detail) are
-created by their route, so leaving the screen disposes them. The list notifiers
-are wired through `ChangeNotifierProxyProvider<AuthProvider, …>` and reset
-themselves when the signed-in user changes, so one account can never see
-another's data.
-
 ### Data layer
 
 `TaskFlowApi` is written as if it were an HTTP client: one method per endpoint,
@@ -360,7 +326,13 @@ Splash · Login · Register · Biometric lock · Dashboard · Projects · Projec
 details · Task list · Task details · Create/Edit project · Create/Edit task ·
 Notifications · Profile & Settings · Developer options.
 
-All of them are shown in motion in [`Demo Task Flow.mp4`](Demo%20Task%20Flow.mp4).
+### Watch it running
+
+[![Watch the demo](screenshots/00-demo-video.png)](Demo%20Task%20Flow.mp4)
+
+▶ **[Demo Task Flow.mp4](Demo%20Task%20Flow.mp4)** — 3 minutes, 1080×2424, 10.5 MB.
+Click the frame above (or the link) to play it on GitHub. Every screen listed
+above appears in it, in motion.
 
 The images in `screenshots/` are generated, not hand-collected:
 
@@ -373,53 +345,3 @@ Beyond the required list: dark mode (Profile → Appearance), a tablet layout
 (navigation rail plus a two-column project grid above 720dp), skeleton loading,
 pull-to-refresh everywhere, an inbox for the mock notifications with deep links
 into the task, and per-task comments.
-
----
-
-## Testing
-
-```bash
-flutter test                                   # unit + widget + end-to-end
-flutter test --coverage                        # writes coverage/lcov.info
-flutter test integration_test/app_test.dart -d <device>   # same flows on a device
-```
-
-- **Unit** — validators, task filtering and sorting, the mock JWT (including
-  tamper detection), the login/refresh/logout lifecycle, and the repositories:
-  org scoping, admin-only rules, cross-org assignment, offline fallback,
-  simulated faults.
-- **Widget** — login form validation and submission, the five list states in
-  `AsyncListView`, the task list screen against the real backend, and task
-  status updates including the failure path.
-- **End-to-end** — `test/support/app_flows.dart` drives the real widget tree,
-  the real router and the real repositories: login, project listing, project
-  details, task listing, task creation, assignment, status update, offline
-  behaviour and logout. It has two entry points: `test/integration/` runs on the
-  host with plain `flutter test`, and `integration_test/` runs the same flows on
-  a device or emulator.
-
-Tests are order-independent and never touch the network: each one builds a fresh
-in-memory stack (`test/support/test_backend.dart`) with storage doubles and zero
-latency.
-
----
-
-## Technical decisions and trade-offs
-
-- **Provider over Bloc.** The brief allows either. Most of this app's state is
-  "fetch a list, show one of five states, mutate an item" — a `ChangeNotifier`
-  with two shared base classes expresses that with far less code than an event
-  and state class per interaction, and it keeps the diff readable.
-- **No code generation.** `freezed`/`json_serializable` would remove some
-  `fromJson` boilerplate, but they add a build step to a reviewer's first
-  `flutter pub get`, and hand-written parsing makes the wire format obvious.
-- **A `Result` type rather than throwing across layers.** Repository callers
-  cannot forget the failure branch, which is what keeps every screen's error
-  state honest.
-- **Filtering happens in the presentation layer.** The dataset is small and the
-  filters are UI state, so filtering the loaded list is instant and works
-  offline. A real API would take the filter as query parameters — `TaskFilter`
-  is a value object precisely so it could be serialized into one.
-- **Rules are enforced in two places on purpose.** Hiding a button is a UI
-  courtesy; `AccessPolicy` in the repository and the role check in the simulated
-  backend are the parts that actually say no.
