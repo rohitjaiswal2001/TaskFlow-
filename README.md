@@ -7,16 +7,14 @@ offline mode.
 - 🌐 &nbsp;**Live web app** — **[taskflow-app-five-mauve.vercel.app](https://taskflow-app-five-mauve.vercel.app)**
 - 📱 &nbsp;**Download the APK** — **[universal and ARM64 builds, v1.0.0](#-download-the-apk)**
 - ▶️ &nbsp;**Demo video** — **[Demo Task Flow.mp4](Demo%20Task%20Flow.mp4)**
-- 🖼️ &nbsp;**Screens** — **[dashboard, tasks, offline, dark mode](#-screens)**
-- 🏗️ &nbsp;**Architecture** — **[layers, request flow, auth flow](#-architecture)**
-- ⚠️ &nbsp;**Limitations** — **[what this build does not do](#-limitations)**
+
 
 <p align="left">
   <img alt="Flutter 3.44.5" src="https://img.shields.io/badge/Flutter-3.44.5-02569B?style=flat-square&logo=flutter&logoColor=white">
   <img alt="Dart 3.12.2" src="https://img.shields.io/badge/Dart-3.12.2-0175C2?style=flat-square&logo=dart&logoColor=white">
   <img alt="State: Provider" src="https://img.shields.io/badge/State-Provider-45D1FD?style=flat-square">
   <img alt="Platforms: Android, iOS, Web" src="https://img.shields.io/badge/Platforms-Android%20%C2%B7%20iOS%20%C2%B7%20Web-6B7280?style=flat-square">
-  <img alt="Backend: simulated" src="https://img.shields.io/badge/Backend-simulated-F59E0B?style=flat-square">
+
 </p>
 
 ---
