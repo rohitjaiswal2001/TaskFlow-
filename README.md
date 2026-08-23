@@ -1,41 +1,52 @@
 # TaskFlow
 
-A lightweight project and task manager for organizations: projects, tasks,
-assignment, comments and notifications, with role-based rules and an offline
-mode.
+## 🌐 Website URL
 
-Everything runs against a **simulated backend** that reads a single bundled JSON
-asset. There is no network call anywhere in the app — but the layering is the
-same as it would be against a real API, and swapping in an HTTP client means
-replacing one class.
-
-[![Deploy with Vercel](https://vercel.com/button)](https://taskflow-app-five-mauve.vercel.app)
-[![Vercel Deployment](https://img.shields.io/badge/Vercel-Live_Demo-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://taskflow-app-five-mauve.vercel.app)
-
----
-
-## 🌐 Live Web Demo
-
-You can try the full application live in your browser:
+Experience TaskFlow directly in your browser:
 🔗 **[https://taskflow-app-five-mauve.vercel.app](https://taskflow-app-five-mauve.vercel.app)**
 
-> **Pre-configured Demo Accounts:**
-> - **Admin:** `alex.miller@taskflow.dev` (Password: `TaskFlow#2026`)
-> - **Member:** `sarah.chen@taskflow.dev` (Password: `TaskFlow#2026`)
-> *(Or use the Quick-Fill dropdown on the login page)*
+---
+
+## 📱 Download & Install Android APK
+
+Get the latest Android release build directly:
+
+- 📥 **[Download Universal APK (v1.0.0)](https://github.com/rohitjaiswal2001/TaskFlow-/releases/download/v1.0.0/app-release.apk)** (~55 MB — works on all Android devices)
+- 📥 **[Download ARM64 APK (v1.0.0)](https://github.com/rohitjaiswal2001/TaskFlow-/releases/download/v1.0.0/app-arm64-v8a-release.apk)** (23 MB — recommended for modern phones & tablets)
+- 📦 **[View GitHub Releases](https://github.com/rohitjaiswal2001/TaskFlow-/releases/tag/v1.0.0)**
+
+#### Quick Install via ADB:
+```bash
+adb install -r app-arm64-v8a-release.apk
+```
 
 ---
 
-| | |
-|---|---|
-| **Live Web App** | **[taskflow-app-five-mauve.vercel.app](https://taskflow-app-five-mauve.vercel.app)** |
-| Flutter | 3.44.5 (stable) |
-| Dart | 3.12.2 |
-| State management | Provider (`ChangeNotifier`) |
-| DI | get_it |
-| Navigation | go_router |
-| Storage | flutter_secure_storage (tokens) + shared_preferences (cache, settings, mock DB) |
-| Platforms | Web, Android, iOS |
+## 📖 About the Project
+
+**TaskFlow** is a lightweight project and task manager for organizations featuring projects, tasks, member assignment, threaded comments, and real-time notifications with role-based access rules and offline-first persistence.
+
+Everything runs against a **simulated backend** that reads a bundled JSON dataset. While operating entirely self-contained without requiring an external backend server, the architecture adheres strictly to clean layering (Data, Domain, Presentation) identical to production applications interacting with a live REST API.
+
+### 🔑 Demo Accounts
+
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Admin** | `alex.miller@taskflow.dev` | `TaskFlow#2026` |
+| **Member** | `sarah.chen@taskflow.dev` | `TaskFlow#2026` |
+
+*(You can also use the Quick-Fill demo accounts button on the login screen)*
+
+---
+
+| Tech Stack | Specifications |
+| :--- | :--- |
+| **Framework** | Flutter 3.44.5 (stable) • Dart 3.12.2 |
+| **State Management** | Provider (`ChangeNotifier` + `AsyncNotifier`) |
+| **Dependency Injection** | `get_it` Service Locator |
+| **Navigation & Routing** | `go_router` with auth guards & redirection |
+| **Storage & Caching** | `flutter_secure_storage` (tokens) + `shared_preferences` (cache, database) |
+| **Supported Platforms** | Web, Android, iOS |
 
 ---
 
