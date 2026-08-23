@@ -11,13 +11,14 @@ replacing one class.
 
 | | |
 |---|---|
+| **Live Web App** | **[taskflow-app-five-mauve.vercel.app](https://taskflow-app-five-mauve.vercel.app)** |
 | Flutter | 3.44.5 (stable) |
 | Dart | 3.12.2 |
 | State management | Provider (`ChangeNotifier`) |
 | DI | get_it |
 | Navigation | go_router |
 | Storage | flutter_secure_storage (tokens) + shared_preferences (cache, settings, mock DB) |
-| Platforms | Android (primary), iOS |
+| Platforms | Web, Android, iOS |
 
 ---
 
@@ -30,10 +31,64 @@ flutter test                    # unit + widget + end-to-end flows
 flutter build apk --release     # release APK
 ```
 
-The release build is signed with the debug keystore so the command works
-without extra setup; a real submission would add its own signing config. The
-default output is a universal APK (~58 MB); add `--split-per-abi` for the
-smaller per-architecture builds.
+Requires Flutter 3.44.5 (stable) or newer on the 3.44 channel; `flutter doctor`
+should be clean for the Android toolchain. Android `minSdk` is 23, the
+application id is `com.taskflow.taskflow`, app version `1.0.0+1`.
+
+## Demo video
+
+A three-minute screen recording of the app on a device —
+[**`Demo Task Flow.mp4`**](Demo%20Task%20Flow.mp4), at the root of this
+repository (10.5 MB, 1080×2424). GitHub plays it inline when you open that file;
+locally, any player will do.
+
+It covers login as an admin and as a member (the role rules), creating and
+assigning a task, offline mode with the saved-copy banner, an armed failure and
+the token refresh.
+
+## APK build
+
+### Build it yourself
+
+```bash
+flutter pub get
+flutter build apk --release                  # one universal APK
+flutter build apk --release --split-per-abi  # smaller, one per architecture
+flutter build appbundle --release            # .aab, for Play upload
+```
+
+Outputs land in `build/app/outputs/flutter-apk/`:
+
+| File | Target | Size |
+|---|---|---|
+| `app-release.apk` | universal (all ABIs) | ~55 MB |
+| `app-armeabi-v7a-release.apk` | 32-bit ARM | 20.4 MB |
+| `app-arm64-v8a-release.apk` | 64-bit ARM — any recent phone | 23.0 MB |
+| `app-x86_64-release.apk` | 64-bit x86 emulators | 24.4 MB |
+
+For a physical device or a modern emulator, `app-arm64-v8a-release.apk` is the
+one to install; use the universal APK if you don't want to think about it.
+
+The release build is signed with the **debug keystore**, deliberately, so
+`flutter build apk --release` works on a fresh clone with no key material to
+hand around. A real submission would add a `signingConfigs` block and a
+`key.properties` file. Because of that, Play Protect may warn on install — the
+APK is not from a known publisher.
+
+### Install it
+
+```bash
+adb install -r build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+```
+
+Or copy the `.apk` onto the device and open it, allowing "install from unknown
+sources" for the file manager when prompted.
+
+`build/` is git-ignored, so the APK is not in version control — build it with
+the command above, or ask for the prebuilt file.
+
+The app needs no network permission or backend to run — everything is served
+from the bundled JSON asset, so the APK works on a device in airplane mode.
 
 ## Test credentials
 
@@ -54,8 +109,9 @@ role rules: a member gets no "New project" button, no edit/delete menu, and is
 still refused if the action is reached another way.
 
 Registering creates a brand new organization with you as its admin — useful for
-seeing the empty states. That account lives in memory only (see
-[Known limitations](#known-limitations)).
+seeing the empty states. That account lives in memory only: passwords are never
+written to disk, so it is gone after a restart. The four demo accounts always
+work.
 
 ---
 
@@ -276,6 +332,8 @@ Splash · Login · Register · Biometric lock · Dashboard · Projects · Projec
 details · Task list · Task details · Create/Edit project · Create/Edit task ·
 Notifications · Profile & Settings · Developer options.
 
+All of them are shown in motion in [`Demo Task Flow.mp4`](Demo%20Task%20Flow.mp4).
+
 The images in `screenshots/` are generated, not hand-collected:
 
 ```bash
@@ -317,26 +375,6 @@ in-memory stack (`test/support/test_backend.dart`) with storage doubles and zero
 latency.
 
 ---
-
-## Known limitations
-
-- **Registered accounts are not persisted.** Passwords are deliberately never
-  written to disk, so a credential created through Register lives in memory
-  only. After a restart, that account is gone and the stored session is rejected,
-  which drops you back on the login screen. The four demo accounts always work.
-- **Avatars are drawn, not downloaded.** The payload points at `pravatar.cc`;
-  fetching it would be a real network call, so `UserAvatar` renders initials on a
-  colour derived from the user id and keeps the URL on the entity.
-- **The token checksum is not a signature.** It only detects hand-edited
-  payloads. It is not, and does not pretend to be, cryptography.
-- **Offline writes are rejected rather than queued.** Reads fall back to the
-  cache; a mutation made while offline fails with a retryable message. The
-  pending-operations queue described as a bonus in the brief is not implemented.
-- **Comments are read/create only** — no editing or deleting.
-- **No i18n.** Strings are inline English; extracting them to ARB files was
-  scoped out.
-- **The release APK is signed with the debug key** so the build command works on
-  a fresh clone.
 
 ## Technical decisions and trade-offs
 
