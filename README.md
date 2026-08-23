@@ -9,6 +9,23 @@ asset. There is no network call anywhere in the app — but the layering is the
 same as it would be against a real API, and swapping in an HTTP client means
 replacing one class.
 
+[![Deploy with Vercel](https://vercel.com/button)](https://taskflow-app-five-mauve.vercel.app)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Live_Demo-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://taskflow-app-five-mauve.vercel.app)
+
+---
+
+## 🌐 Live Web Demo
+
+You can try the full application live in your browser:
+🔗 **[https://taskflow-app-five-mauve.vercel.app](https://taskflow-app-five-mauve.vercel.app)**
+
+> **Pre-configured Demo Accounts:**
+> - **Admin:** `alex.miller@taskflow.dev` (Password: `TaskFlow#2026`)
+> - **Member:** `sarah.chen@taskflow.dev` (Password: `TaskFlow#2026`)
+> *(Or use the Quick-Fill dropdown on the login page)*
+
+---
+
 | | |
 |---|---|
 | **Live Web App** | **[taskflow-app-five-mauve.vercel.app](https://taskflow-app-five-mauve.vercel.app)** |
