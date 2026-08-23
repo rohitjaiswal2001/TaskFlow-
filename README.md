@@ -4,15 +4,14 @@ A lightweight project and task manager for organizations — projects, tasks,
 member assignment, comments and notifications, with role-based rules and an
 offline mode.
 
-<p align="center">
-  <a href="https://taskflow-app-five-mauve.vercel.app"><img alt="Live web app" src="https://img.shields.io/badge/Live%20web%20app-000000?style=for-the-badge&logo=vercel&logoColor=white"></a>
-  <a href="#-download-the-apk"><img alt="Download the APK" src="https://img.shields.io/badge/Download%20APK-3DDC84?style=for-the-badge&logo=android&logoColor=white"></a>
-  <a href="Demo%20Task%20Flow.mp4"><img alt="Demo video" src="https://img.shields.io/badge/Demo%20video-E11D48?style=for-the-badge&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik04IDV2MTRsMTEtN3oiLz48L3N2Zz4="></a>
-  <a href="#-screens"><img alt="Screens" src="https://img.shields.io/badge/Screens-4C6EF5?style=for-the-badge&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0yMSAzSDNhMiAyIDAgMCAwLTIgMnYxNGEyIDIgMCAwIDAgMiAyaDE4YTIgMiAwIDAgMCAyLTJWNWEyIDIgMCAwIDAtMi0yek04LjUgOC41YTIgMiAwIDEgMSAwIDQgMiAyIDAgMCAxIDAtNHpNNCAxOWw0LjUtNS41IDMgMy41TDE1IDEybDUgN0g0eiIvPjwvc3ZnPg=="></a>
-  <a href="#-architecture"><img alt="Architecture" src="https://img.shields.io/badge/Architecture-7048E8?style=for-the-badge&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAxNiAzLjYgOS41IDEyIDNsOC40IDYuNUwxMiAxNnptMCAyLjYgNy4yLTUuNiAxLjIuOUwxMiAyMC40IDMuNiAxMy45bDEuMi0uOSA3LjIgNS42eiIvPjwvc3ZnPg=="></a>
-</p>
+- 🌐 &nbsp;**Live web app** — **[taskflow-app-five-mauve.vercel.app](https://taskflow-app-five-mauve.vercel.app)**
+- 📱 &nbsp;**Download the APK** — **[universal and ARM64 builds, v1.0.0](#-download-the-apk)**
+- ▶️ &nbsp;**Demo video** — **[Demo Task Flow.mp4](Demo%20Task%20Flow.mp4)**
+- 🖼️ &nbsp;**Screens** — **[dashboard, tasks, offline, dark mode](#-screens)**
+- 🏗️ &nbsp;**Architecture** — **[layers, request flow, auth flow](#-architecture)**
+- ⚠️ &nbsp;**Limitations** — **[what this build does not do](#-limitations)**
 
-<p align="center">
+<p align="left">
   <img alt="Flutter 3.44.5" src="https://img.shields.io/badge/Flutter-3.44.5-02569B?style=flat-square&logo=flutter&logoColor=white">
   <img alt="Dart 3.12.2" src="https://img.shields.io/badge/Dart-3.12.2-0175C2?style=flat-square&logo=dart&logoColor=white">
   <img alt="State: Provider" src="https://img.shields.io/badge/State-Provider-45D1FD?style=flat-square">
@@ -307,7 +306,7 @@ lib/
 
 ---
 
-## ⚠️ Limitations
+## ⚠ Limitations
 
 Known and deliberate, so nobody has to discover them by accident.
 
