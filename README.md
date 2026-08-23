@@ -331,3 +331,43 @@ lib/
     ├── state/              # ViewState + the two async notifier bases
     └── widgets/            # reusable components
 ```
+
+---
+
+## ⚠️ Limitations
+
+Known and deliberate, so nobody has to discover them by accident.
+
+- **Registered accounts do not survive a restart.** Passwords are never written
+  to disk on purpose, and the persisted snapshot covers projects, tasks,
+  comments and notifications — not users, organizations or credentials. An
+  account created through Register (and its organization) is gone on the next
+  launch, and the stored session is then rejected, dropping you back on login.
+  The four demo accounts always work.
+- **Offline writes are rejected, not queued.** Reads fall back to the cached
+  copy; a create or update attempted while offline fails with a retryable
+  message. There is no pending-operations queue that replays on reconnect.
+- **Comments can be added and read, but not edited or deleted.**
+  `TaskRepository` exposes `getComments` and `addComment` and nothing else.
+- **Avatars are drawn, not downloaded.** The payload points at `pravatar.cc`;
+  fetching it would be a real network call, so `UserAvatar` renders initials on
+  a colour derived from the user id and keeps the URL on the entity.
+- **The token checksum is not a signature.** It detects a hand-edited payload
+  and nothing more. It is not, and does not pretend to be, cryptography — a real
+  backend signs its tokens with a key the client never sees.
+- **Filtering and sorting happen on the client.** The dataset is small and the
+  filters are UI state, so the loaded list is filtered in the presentation layer
+  — instant, and it still works offline. `TaskFilter` is a value object
+  precisely so a real API could take it as query parameters instead.
+- **Biometric unlock is Android and iOS only.** `BiometricService` degrades to
+  "unavailable" wherever the platform has no local auth, so the option simply
+  does not appear on the web build.
+- **The web demo is per-browser.** It keeps its mock database in your browser's
+  storage, so two visitors never see each other's changes, and clearing site
+  data resets everything. Tokens there sit in browser storage rather than a
+  platform keychain.
+- **No internationalization.** Strings are inline English; extracting them to
+  ARB files was scoped out.
+- **The release APK is signed with the debug keystore**, so `flutter build apk
+  --release` works on a fresh clone. Play Protect will say the publisher is
+  unknown, and this build could not be uploaded to Play as-is.
