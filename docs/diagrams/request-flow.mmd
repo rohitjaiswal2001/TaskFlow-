@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant UI as Screen
+    participant PR as Provider
+    participant RE as Repository
+    participant API as MockTaskFlowApi
+    participant DB as MockDatabase
+
+    UI->>PR: load()
+    PR-->>UI: loading (previous data kept on screen)
+    PR->>RE: fetch(filter)
+    RE->>API: request DTO
+    API->>API: NetworkSimulator — latency, offline, injected fault
+    API->>API: verify bearer token, apply org scope + role
+    API->>DB: read / write
+    DB-->>API: rows
+    API-->>RE: JSON envelope → response DTO
+    RE->>RE: AccessPolicy, DTO → entity, cache write
+    RE-->>PR: Result: Ok(Snapshot) | Err(Failure)
+    PR-->>UI: success · empty · error

@@ -1,0 +1,18 @@
+flowchart TB
+    subgraph PRES["presentation"]
+        direction LR
+        P1["screens · widgets"] --- P2["ChangeNotifier providers"] --- P3["ViewState<br/>initial · loading · success · empty · error"]
+    end
+    subgraph DOM["domain"]
+        direction LR
+        D1["entities"] --- D2["repository interfaces"] --- D3["AccessPolicy · TaskFilter"]
+    end
+    subgraph DATA["data"]
+        direction TB
+        C1["repository implementations"] --> C2["TaskFlowApi — the HTTP-shaped interface"]
+        C2 --> C3["MockTaskFlowApi"] --> C4["MockDatabase ← bundled asset JSON"]
+        C2 -.-> C5["DioTaskFlowApi — a real one would slot in here"]
+        C6["SessionManager · SecureSessionStore · CacheStore"]
+    end
+    PRES -->|"Result / Snapshot, entities"| DOM
+    DATA -->|"implements"| DOM

@@ -181,29 +181,19 @@ flutter drive --driver=test_driver/integration_test.dart \
 Three layers, dependencies pointing inward. `domain` knows nothing about Flutter
 or JSON; `presentation` knows nothing about where data comes from.
 
-```mermaid
-flowchart TB
-    subgraph PRES["presentation"]
-        direction LR
-        P1["screens · widgets"] --- P2["ChangeNotifier providers"] --- P3["ViewState<br/>initial · loading · success · empty · error"]
-    end
-    subgraph DOM["domain"]
-        direction LR
-        D1["entities"] --- D2["repository interfaces"] --- D3["AccessPolicy · TaskFilter"]
-    end
-    subgraph DATA["data"]
-        direction TB
-        C1["repository implementations"] --> C2["TaskFlowApi — the HTTP-shaped interface"]
-        C2 --> C3["MockTaskFlowApi"] --> C4["MockDatabase ← bundled asset JSON"]
-        C2 -.-> C5["DioTaskFlowApi — a real one would slot in here"]
-        C6["SessionManager · SecureSessionStore · CacheStore"]
-    end
-    PRES -->|"Result / Snapshot, entities"| DOM
-    DATA -->|"implements"| DOM
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/architecture-dark.svg">
+  <img alt="TaskFlow layer diagram: presentation and data both depend on domain" src="docs/diagrams/architecture.svg">
+</picture>
 
 A fuller write-up — request lifecycle, auth sequence, trade-offs — is in
-[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). The diagrams on this page are
+generated from the Mermaid sources in [`docs/diagrams/`](docs/diagrams/):
+
+```bash
+mmdc -i docs/diagrams/architecture.mmd -o docs/diagrams/architecture.svg -b transparent
+mmdc -i docs/diagrams/architecture.mmd -o docs/diagrams/architecture-dark.svg -b transparent -t dark
+```
 
 ### How a request flows
 
@@ -212,27 +202,10 @@ would also take. The mock backend even returns a plain JSON envelope
 (`{"data": …, "meta": …}`) that is parsed back into models, so serialization runs
 on every single call.
 
-```mermaid
-sequenceDiagram
-    participant UI as Screen
-    participant PR as Provider
-    participant RE as Repository
-    participant API as MockTaskFlowApi
-    participant DB as MockDatabase
-
-    UI->>PR: load()
-    PR-->>UI: loading (previous data kept on screen)
-    PR->>RE: fetch(filter)
-    RE->>API: request DTO
-    API->>API: NetworkSimulator — latency, offline, injected fault
-    API->>API: verify bearer token, apply org scope + role
-    API->>DB: read / write
-    DB-->>API: rows
-    API-->>RE: JSON envelope → response DTO
-    RE->>RE: AccessPolicy, DTO → entity, cache write
-    RE-->>PR: Result: Ok(Snapshot) | Err(Failure)
-    PR-->>UI: success · empty · error
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/request-flow-dark.svg">
+  <img alt="Sequence diagram of one request from screen to mock database and back" src="docs/diagrams/request-flow.svg">
+</picture>
 
 `Result<T>` (`Ok` / `Err`) means no caller can ignore the failure path, which is
 what keeps every screen's error state honest. List reads return `Snapshot<T>`,
@@ -245,20 +218,10 @@ inline retry strip when a refresh fails over data already on screen.
 
 ### Auth and tokens
 
-```mermaid
-flowchart TD
-    A["Login"] --> B{"matches test_credentials?"}
-    B -- no --> C["Err — invalid credentials"]
-    B -- yes --> E["mint JWT-style access + refresh → secure storage"]
-    E --> G["router redirect → Dashboard"]
-    G --> H["any API call"]
-    H --> I{"access token expired?"}
-    I -- no --> J["200 OK"]
-    I -- yes --> K["401 → ApiCallRunner refreshes once"]
-    K --> L{"refresh token valid?"}
-    L -- yes --> M["retry original request → 200"]
-    L -- no --> N["clear session → login, with a reason"]
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/auth-flow-dark.svg">
+  <img alt="Flowchart of login, token storage, and the 401 refresh-and-retry path" src="docs/diagrams/auth-flow.svg">
+</picture>
 
 - The token is `<mock token from the payload>.<base64url(claims)>.<checksum>`, so
   the stored value still starts with the literal string from

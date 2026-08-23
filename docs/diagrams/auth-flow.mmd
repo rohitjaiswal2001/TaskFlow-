@@ -1,0 +1,12 @@
+flowchart TD
+    A["Login"] --> B{"matches test_credentials?"}
+    B -- no --> C["Err — invalid credentials"]
+    B -- yes --> E["mint JWT-style access + refresh → secure storage"]
+    E --> G["router redirect → Dashboard"]
+    G --> H["any API call"]
+    H --> I{"access token expired?"}
+    I -- no --> J["200 OK"]
+    I -- yes --> K["401 → ApiCallRunner refreshes once"]
+    K --> L{"refresh token valid?"}
+    L -- yes --> M["retry original request → 200"]
+    L -- no --> N["clear session → login, with a reason"]
